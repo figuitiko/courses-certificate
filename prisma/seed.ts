@@ -1,7 +1,11 @@
+import "dotenv/config";
 import { hash } from "bcryptjs";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Role } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL ?? "" }),
+});
 
 async function main() {
   const [adminPasswordHash, learnerPasswordHash] = await Promise.all([
