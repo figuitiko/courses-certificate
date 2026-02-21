@@ -3,8 +3,28 @@ import { hash } from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Role } from "@prisma/client";
 
+function normalizeConnectionString(connectionString: string): string {
+  if (!connectionString) {
+    return connectionString;
+  }
+
+  const hasLibpqCompat = /(?:\?|&)uselibpqcompat=true(?:&|$)/i.test(
+    connectionString,
+  );
+  if (hasLibpqCompat) {
+    return connectionString;
+  }
+
+  return connectionString.replace(
+    /([?&])sslmode=(prefer|require|verify-ca)(?=(&|$))/i,
+    "$1sslmode=verify-full",
+  );
+}
+
 const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL ?? "" }),
+  adapter: new PrismaPg({
+    connectionString: normalizeConnectionString(process.env.DATABASE_URL ?? ""),
+  }),
 });
 
 async function main() {

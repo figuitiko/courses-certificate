@@ -4,8 +4,27 @@ import { PrismaPg } from "@prisma/adapter-pg";
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
+
+function normalizeConnectionString(connectionString: string): string {
+  if (!connectionString) {
+    return connectionString;
+  }
+
+  const hasLibpqCompat = /(?:\?|&)uselibpqcompat=true(?:&|$)/i.test(
+    connectionString,
+  );
+  if (hasLibpqCompat) {
+    return connectionString;
+  }
+
+  return connectionString.replace(
+    /([?&])sslmode=(prefer|require|verify-ca)(?=(&|$))/i,
+    "$1sslmode=verify-full",
+  );
+}
+
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL ?? "",
+  connectionString: normalizeConnectionString(process.env.DATABASE_URL ?? ""),
 });
 
 export const db =
