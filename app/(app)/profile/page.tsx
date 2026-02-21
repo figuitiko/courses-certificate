@@ -1,7 +1,14 @@
+import Link from "next/link";
+
 import { getUserPoints } from "@/actions/points";
 import { getCurrentUser } from "@/lib/session";
-import { ProfileForm } from "@/components/profile-form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { PointsBadge } from "@/components/points/points-badge";
 import { PointsLedgerTable } from "@/components/points/points-ledger-table";
 
@@ -12,17 +19,24 @@ export default async function ProfilePage() {
     return (
       <Card className="mx-auto max-w-lg">
         <CardHeader>
-          <CardTitle>Create your learner profile</CardTitle>
-          <CardDescription>This MVP uses a simple handle stored in a secure cookie.</CardDescription>
+          <CardTitle>Sign in required</CardTitle>
+          <CardDescription>
+            Sign in to view your profile and points ledger.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <ProfileForm />
+          <Link
+            href="/sign-in?next=/profile"
+            className="text-primary underline"
+          >
+            Go to sign in
+          </Link>
         </CardContent>
       </Card>
     );
   }
 
-  const points = await getUserPoints({ userId: user.id });
+  const points = await getUserPoints();
 
   return (
     <div className="space-y-6">

@@ -15,7 +15,6 @@ type Material = {
 };
 
 type LessonPlayerProps = {
-  userId: string;
   courseId: string;
   lesson: {
     id: string;
@@ -27,7 +26,11 @@ type LessonPlayerProps = {
   isCompleted: boolean;
 };
 
-export function LessonPlayer({ userId, courseId, lesson, isCompleted }: LessonPlayerProps) {
+export function LessonPlayer({
+  courseId,
+  lesson,
+  isCompleted,
+}: LessonPlayerProps) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -40,7 +43,11 @@ export function LessonPlayer({ userId, courseId, lesson, isCompleted }: LessonPl
     <section className="space-y-5">
       <div>
         <h2 className="text-2xl font-semibold">{lesson.title}</h2>
-        {lesson.content && <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{lesson.content}</p>}
+        {lesson.content && (
+          <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+            {lesson.content}
+          </p>
+        )}
       </div>
 
       {embeddedVideoUrl ? (
@@ -54,18 +61,27 @@ export function LessonPlayer({ userId, courseId, lesson, isCompleted }: LessonPl
           />
         </div>
       ) : (
-        <div className="rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">No video URL provided.</div>
+        <div className="rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">
+          No video URL provided.
+        </div>
       )}
 
       <div className="space-y-2">
         <h3 className="font-medium">Downloadable Materials</h3>
         {lesson.materials.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No materials for this lesson yet.</p>
+          <p className="text-sm text-muted-foreground">
+            No materials for this lesson yet.
+          </p>
         ) : (
           <ul className="space-y-2 text-sm">
             {lesson.materials.map((material) => (
               <li key={material.id}>
-                <a href={material.fileUrl} target="_blank" rel="noreferrer" className="text-primary underline">
+                <a
+                  href={material.fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary underline"
+                >
                   {material.title} ({material.fileType})
                 </a>
               </li>
@@ -78,9 +94,8 @@ export function LessonPlayer({ userId, courseId, lesson, isCompleted }: LessonPl
         onClick={() => {
           startTransition(async () => {
             const result = await markLessonComplete({
-              userId,
               courseId,
-              lessonId: lesson.id
+              lessonId: lesson.id,
             });
 
             if (!result.ok) {
@@ -88,13 +103,21 @@ export function LessonPlayer({ userId, courseId, lesson, isCompleted }: LessonPl
               return;
             }
 
-            toast.success(result.data.completedCourse ? "Lesson complete. Course completed!" : "Lesson marked complete.");
+            toast.success(
+              result.data.completedCourse
+                ? "Lesson complete. Course completed!"
+                : "Lesson marked complete.",
+            );
             router.refresh();
           });
         }}
         disabled={pending || isCompleted}
       >
-        {isCompleted ? "Already completed" : pending ? "Saving..." : "Mark complete"}
+        {isCompleted
+          ? "Already completed"
+          : pending
+            ? "Saving..."
+            : "Mark complete"}
       </Button>
     </section>
   );

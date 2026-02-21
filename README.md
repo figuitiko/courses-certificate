@@ -13,10 +13,10 @@ Production-grade MVP for a consulting learning platform built with Next.js App R
 ## Features
 
 - Course catalog and course detail pages
-- Cookie-based user handle profile (no auth MVP)
+- Authentication with Auth.js (credentials + Google OAuth)
 - Enrollment + lesson completion tracking
 - Points system and auditable points ledger
-- Admin mode (cookie toggle) for course, lesson, materials, and point adjustment management
+- Role-based admin access for course, lesson, materials, and point adjustment management
 
 ## Routes
 
@@ -39,7 +39,7 @@ Production-grade MVP for a consulting learning platform built with Next.js App R
 npm install
 ```
 
-2. Configure environment:
+1. Configure environment:
 
 ```bash
 cp .env.example .env
@@ -47,20 +47,31 @@ cp .env.example .env
 
 Set `DATABASE_URL` to your PostgreSQL connection string.
 
-3. Generate Prisma client and run migrations:
+Also configure auth variables:
+
+- `AUTH_SECRET` (secure random string)
+- `AUTH_GOOGLE_ID` (Google OAuth client ID)
+- `AUTH_GOOGLE_SECRET` (Google OAuth client secret)
+
+1. Generate Prisma client and run migrations:
 
 ```bash
 npm run prisma:generate
 npm run prisma:migrate -- --name init
 ```
 
-4. Seed sample data:
+1. Seed sample data:
 
 ```bash
 npm run prisma:seed
 ```
 
-5. Start dev server:
+Default local seeded credentials:
+
+- Admin: `admin@consultingacademy.dev` / `admin12345`
+- Learner: `learner@consultingacademy.dev` / `learner12345`
+
+1. Start dev server:
 
 ```bash
 npm run dev
@@ -83,10 +94,10 @@ npm run dev
 npx prisma migrate deploy
 ```
 
-5. Deploy.
+1. Deploy.
 
 ## Notes
 
 - Use embedded video URLs (e.g., YouTube embed links) for lesson playback.
 - Materials are URL-based in MVP (S3/R2/Drive links).
-- Admin mode is intentionally lightweight and not secure for production without real authentication.
+- Configure Google OAuth credentials in the provider console for Google sign-in.

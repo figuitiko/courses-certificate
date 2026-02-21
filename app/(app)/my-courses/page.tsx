@@ -16,7 +16,14 @@ export default async function MyCoursesPage() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Create your profile handle first from <Link href="/profile" className="text-primary underline">Profile</Link>.
+            Sign in first from{" "}
+            <Link
+              href="/sign-in?next=/my-courses"
+              className="text-primary underline"
+            >
+              Sign in
+            </Link>
+            .
           </p>
         </CardContent>
       </Card>
@@ -26,14 +33,16 @@ export default async function MyCoursesPage() {
   const enrollments = await db.enrollment.findMany({
     where: { userId: user.id },
     include: { course: true },
-    orderBy: { updatedAt: "desc" }
+    orderBy: { updatedAt: "desc" },
   });
 
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-semibold">My Courses</h1>
       {enrollments.length === 0 ? (
-        <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">You are not enrolled in any courses yet.</p>
+        <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
+          You are not enrolled in any courses yet.
+        </p>
       ) : (
         <div className="grid gap-4">
           {enrollments.map((enrollment) => (
@@ -41,13 +50,20 @@ export default async function MyCoursesPage() {
               <CardContent className="flex flex-col gap-3 pt-6 md:flex-row md:items-center md:justify-between">
                 <div>
                   <h2 className="font-semibold">{enrollment.course.title}</h2>
-                  <p className="text-sm text-muted-foreground">{enrollment.status}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {enrollment.status}
+                  </p>
                 </div>
                 <div className="w-full max-w-xs space-y-2">
                   <Progress value={enrollment.progressPercent} />
-                  <p className="text-right text-sm text-muted-foreground">{Math.round(enrollment.progressPercent)}%</p>
+                  <p className="text-right text-sm text-muted-foreground">
+                    {Math.round(enrollment.progressPercent)}%
+                  </p>
                 </div>
-                <Link href={`/learn/${enrollment.courseId}`} className="text-primary underline">
+                <Link
+                  href={`/learn/${enrollment.courseId}`}
+                  className="text-primary underline"
+                >
                   Continue
                 </Link>
               </CardContent>

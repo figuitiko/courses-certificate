@@ -1,6 +1,10 @@
 "use server";
 
-import { EnrollmentStatus, LessonProgressStatus, PointSourceType } from "@prisma/client";
+import {
+  EnrollmentStatus,
+  LessonProgressStatus,
+  PointSourceType,
+} from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
@@ -8,28 +12,32 @@ import { DEFAULT_POINTS } from "@/lib/constants";
 import { markLessonCompleteSchema } from "@/lib/zod/schemas";
 import { awardPointsOnce } from "@/actions/points";
 import { toPercent } from "@/lib/utils";
+import { requireUser } from "@/lib/session";
 import type { ActionResult } from "@/lib/action-result";
 
 export async function markLessonComplete(input: {
-  userId: string;
   courseId: string;
   lessonId: string;
-}): Promise<ActionResult<{ progressPercent: number; completedCourse: boolean }>> {
+}): Promise<
+  ActionResult<{ progressPercent: number; completedCourse: boolean }>
+> {
+  const user = await requireUser();
+
   const parsed = markLessonCompleteSchema.safeParse(input);
 
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid completion request.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
-  const { userId, courseId, lessonId } = parsed.data;
+  const { courseId, lessonId } = parsed.data;
 
   const [lesson, course] = await Promise.all([
     db.lesson.findUnique({ where: { id: lessonId } }),
-    db.course.findUnique({ where: { id: courseId } })
+    db.course.findUnique({ where: { id: courseId } }),
   ]);
 
   if (!lesson || lesson.courseId !== courseId || !course) {
@@ -37,40 +45,51 @@ export async function markLessonComplete(input: {
   }
 
   await db.lessonProgress.upsert({
-    where: { userId_lessonId: { userId, lessonId } },
+    where: { userId_lessonId: { userId: user.id, lessonId } },
     update: {
       status: LessonProgressStatus.COMPLETED,
       completedAt: new Date(),
-      courseId
+      courseId,
     },
     create: {
-      userId,
+      userId: user.id,
       lessonId,
       courseId,
       status: LessonProgressStatus.COMPLETED,
-      completedAt: new Date()
-    }
+      completedAt: new Date(),
+    },
   });
 
   await awardPointsOnce({
-    userId,
+    userId: user.id,
     sourceType: PointSourceType.LESSON_COMPLETE,
     sourceId: lessonId,
     points: lesson.pointsOnComplete ?? DEFAULT_POINTS.lessonComplete,
-    note: `Completed lesson: ${lesson.title}`
+    note: `Completed lesson: ${lesson.title}`,
   });
 
   const [totalLessons, completedLessons] = await Promise.all([
     db.lesson.count({ where: { courseId } }),
-    db.lessonProgress.count({ where: { userId, courseId, status: LessonProgressStatus.COMPLETED } })
+    db.lessonProgress.count({
+      where: {
+        userId: user.id,
+        courseId,
+        status: LessonProgressStatus.COMPLETED,
+      },
+    }),
   ]);
 
   const progressPercent = toPercent(completedLessons, totalLessons);
 
   await db.enrollment.upsert({
-    where: { userId_courseId: { userId, courseId } },
+    where: { userId_courseId: { userId: user.id, courseId } },
     update: { progressPercent },
-    create: { userId, courseId, progressPercent, status: EnrollmentStatus.ENROLLED }
+    create: {
+      userId: user.id,
+      courseId,
+      progressPercent,
+      status: EnrollmentStatus.ENROLLED,
+    },
   });
 
   let completedCourse = false;
@@ -79,19 +98,19 @@ export async function markLessonComplete(input: {
     completedCourse = true;
 
     await db.enrollment.update({
-      where: { userId_courseId: { userId, courseId } },
+      where: { userId_courseId: { userId: user.id, courseId } },
       data: {
         status: EnrollmentStatus.COMPLETED,
-        progressPercent: 100
-      }
+        progressPercent: 100,
+      },
     });
 
     await awardPointsOnce({
-      userId,
+      userId: user.id,
       sourceType: PointSourceType.COURSE_COMPLETE,
       sourceId: courseId,
       points: course.pointsOnComplete ?? DEFAULT_POINTS.courseComplete,
-      note: `Completed course: ${course.title}`
+      note: `Completed course: ${course.title}`,
     });
   }
 
@@ -103,7 +122,7 @@ export async function markLessonComplete(input: {
     ok: true,
     data: {
       progressPercent,
-      completedCourse
-    }
+      completedCourse,
+    },
   };
 }

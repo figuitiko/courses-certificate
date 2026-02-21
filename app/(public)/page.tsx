@@ -11,16 +11,19 @@ export default async function HomePage() {
   return (
     <div className="space-y-10">
       <section className="grid gap-4 rounded-2xl border bg-card/70 p-8">
-        <h1 className="text-4xl font-bold tracking-tight">Grow Consulting Skills with Guided, Practical Training</h1>
+        <h1 className="text-4xl font-bold tracking-tight">
+          Grow Consulting Skills with Guided, Practical Training
+        </h1>
         <p className="max-w-2xl text-muted-foreground">
-          Consulting Academy helps you enroll in structured courses, watch lesson videos, download templates, and earn points as you progress.
+          Consulting Academy helps you enroll in structured courses, watch
+          lesson videos, download templates, and earn points as you progress.
         </p>
         <div className="flex gap-3">
           <Button asChild>
             <Link href="/courses">Browse courses</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/profile">Create profile handle</Link>
+            <Link href="/sign-up">Create account</Link>
           </Button>
         </div>
       </section>
@@ -28,7 +31,9 @@ export default async function HomePage() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Featured courses</h2>
         {featured.length === 0 ? (
-          <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">No published courses yet.</p>
+          <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
+            No published courses yet.
+          </p>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {featured.map((course) => (

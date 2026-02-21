@@ -11,29 +11,39 @@ import { Progress } from "@/components/ui/progress";
 
 export default async function LearnPage({
   params,
-  searchParams
+  searchParams,
 }: {
   params: Promise<{ courseId: string }>;
   searchParams: Promise<{ lesson?: string }>;
 }) {
-  const [{ courseId }, sp, user] = await Promise.all([params, searchParams, getCurrentUser()]);
+  const [{ courseId }, sp, user] = await Promise.all([
+    params,
+    searchParams,
+    getCurrentUser(),
+  ]);
 
   if (!user) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Create your profile to start learning</CardTitle>
+          <CardTitle>Sign in to start learning</CardTitle>
         </CardHeader>
         <CardContent>
-          <Link className="text-primary underline" href="/profile">
-            Go to profile
+          <Link
+            className="text-primary underline"
+            href={`/sign-in?next=/learn/${courseId}`}
+          >
+            Go to sign in
           </Link>
         </CardContent>
       </Card>
     );
   }
 
-  const [course, state] = await Promise.all([getCourse(courseId), getUserCourseState({ userId: user.id, courseId })]);
+  const [course, state] = await Promise.all([
+    getCourse(courseId),
+    getUserCourseState({ courseId }),
+  ]);
 
   if (!course || !course.published) {
     notFound();
@@ -46,7 +56,10 @@ export default async function LearnPage({
           <CardTitle>Enroll first</CardTitle>
         </CardHeader>
         <CardContent>
-          <Link className="text-primary underline" href={`/courses/${course.id}`}>
+          <Link
+            className="text-primary underline"
+            href={`/courses/${course.id}`}
+          >
             Open course detail and enroll
           </Link>
         </CardContent>
@@ -73,22 +86,30 @@ export default async function LearnPage({
       <div>
         <h1 className="text-2xl font-semibold">{course.title}</h1>
         <div className="mt-2 flex items-center gap-3">
-          <Progress value={state.enrollment.progressPercent} className="max-w-sm" />
-          <span className="text-sm text-muted-foreground">{Math.round(state.enrollment.progressPercent)}%</span>
+          <Progress
+            value={state.enrollment.progressPercent}
+            className="max-w-sm"
+          />
+          <span className="text-sm text-muted-foreground">
+            {Math.round(state.enrollment.progressPercent)}%
+          </span>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-[300px_1fr]">
         <Card>
           <CardContent className="pt-6">
-            <CourseSidebar courseId={courseId} lessons={course.lessons} completedLessonIds={state.completedLessonIds} />
+            <CourseSidebar
+              courseId={courseId}
+              lessons={course.lessons}
+              completedLessonIds={state.completedLessonIds}
+            />
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="pt-6">
             <LessonPlayer
-              userId={user.id}
               courseId={courseId}
               lesson={selectedLesson}
               isCompleted={state.completedLessonIds.includes(selectedLesson.id)}

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/session";
 import { courseSchema, lessonSchema, materialSchema } from "@/lib/zod/schemas";
 import type { ActionResult } from "@/lib/action-result";
 
@@ -14,41 +15,50 @@ export async function createCourse(input: {
   pointsOnEnroll: number;
   pointsOnComplete: number;
 }): Promise<ActionResult<{ courseId: string }>> {
+  await requireAdmin();
+
   const parsed = courseSchema.safeParse(input);
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid course input.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
-  const course = await db.course.create({ data: { ...parsed.data, thumbnailUrl: parsed.data.thumbnailUrl || null } });
+  const course = await db.course.create({
+    data: { ...parsed.data, thumbnailUrl: parsed.data.thumbnailUrl || null },
+  });
   revalidatePath("/admin/courses");
   revalidatePath("/courses");
   return { ok: true, data: { courseId: course.id } };
 }
 
-export async function updateCourse(courseId: string, input: {
-  title: string;
-  description: string;
-  thumbnailUrl?: string;
-  published?: boolean;
-  pointsOnEnroll: number;
-  pointsOnComplete: number;
-}): Promise<ActionResult<{ courseId: string }>> {
+export async function updateCourse(
+  courseId: string,
+  input: {
+    title: string;
+    description: string;
+    thumbnailUrl?: string;
+    published?: boolean;
+    pointsOnEnroll: number;
+    pointsOnComplete: number;
+  },
+): Promise<ActionResult<{ courseId: string }>> {
+  await requireAdmin();
+
   const parsed = courseSchema.safeParse(input);
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid course input.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
   await db.course.update({
     where: { id: courseId },
-    data: { ...parsed.data, thumbnailUrl: parsed.data.thumbnailUrl || null }
+    data: { ...parsed.data, thumbnailUrl: parsed.data.thumbnailUrl || null },
   });
 
   revalidatePath("/admin/courses");
@@ -58,7 +68,12 @@ export async function updateCourse(courseId: string, input: {
   return { ok: true, data: { courseId } };
 }
 
-export async function publishCourse(courseId: string, published: boolean): Promise<ActionResult<{ courseId: string }>> {
+export async function publishCourse(
+  courseId: string,
+  published: boolean,
+): Promise<ActionResult<{ courseId: string }>> {
+  await requireAdmin();
+
   await db.course.update({ where: { id: courseId }, data: { published } });
   revalidatePath("/courses");
   revalidatePath(`/courses/${courseId}`);
@@ -74,12 +89,14 @@ export async function createLesson(input: {
   order: number;
   pointsOnComplete?: number;
 }): Promise<ActionResult<{ lessonId: string }>> {
+  await requireAdmin();
+
   const parsed = lessonSchema.safeParse(input);
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid lesson input.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
@@ -87,8 +104,8 @@ export async function createLesson(input: {
     data: {
       ...parsed.data,
       content: parsed.data.content || null,
-      videoUrl: parsed.data.videoUrl || null
-    }
+      videoUrl: parsed.data.videoUrl || null,
+    },
   });
 
   revalidatePath(`/admin/courses/${parsed.data.courseId}`);
@@ -105,14 +122,16 @@ export async function updateLesson(
     videoUrl?: string;
     order: number;
     pointsOnComplete?: number;
-  }
+  },
 ): Promise<ActionResult<{ lessonId: string }>> {
+  await requireAdmin();
+
   const parsed = lessonSchema.safeParse(input);
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid lesson input.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
@@ -121,8 +140,8 @@ export async function updateLesson(
     data: {
       ...parsed.data,
       content: parsed.data.content || null,
-      videoUrl: parsed.data.videoUrl || null
-    }
+      videoUrl: parsed.data.videoUrl || null,
+    },
   });
 
   revalidatePath(`/admin/courses/${parsed.data.courseId}`);
@@ -130,14 +149,19 @@ export async function updateLesson(
   return { ok: true, data: { lessonId } };
 }
 
-export async function reorderLessons(courseId: string, orderedLessonIds: string[]): Promise<ActionResult<null>> {
+export async function reorderLessons(
+  courseId: string,
+  orderedLessonIds: string[],
+): Promise<ActionResult<null>> {
+  await requireAdmin();
+
   await db.$transaction(
     orderedLessonIds.map((lessonId, index) =>
       db.lesson.update({
         where: { id: lessonId },
-        data: { order: index + 1 }
-      })
-    )
+        data: { order: index + 1 },
+      }),
+    ),
   );
 
   revalidatePath(`/admin/courses/${courseId}`);
@@ -151,18 +175,23 @@ export async function addMaterial(input: {
   fileUrl: string;
   fileType: string;
 }): Promise<ActionResult<{ materialId: string }>> {
+  await requireAdmin();
+
   const parsed = materialSchema.safeParse(input);
 
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid material input.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
   const material = await db.material.create({ data: parsed.data });
-  const lesson = await db.lesson.findUnique({ where: { id: parsed.data.lessonId }, select: { courseId: true } });
+  const lesson = await db.lesson.findUnique({
+    where: { id: parsed.data.lessonId },
+    select: { courseId: true },
+  });
 
   if (lesson) {
     revalidatePath(`/admin/courses/${lesson.courseId}`);
@@ -172,10 +201,14 @@ export async function addMaterial(input: {
   return { ok: true, data: { materialId: material.id } };
 }
 
-export async function removeMaterial(materialId: string): Promise<ActionResult<null>> {
+export async function removeMaterial(
+  materialId: string,
+): Promise<ActionResult<null>> {
+  await requireAdmin();
+
   const material = await db.material.findUnique({
     where: { id: materialId },
-    include: { lesson: { select: { courseId: true } } }
+    include: { lesson: { select: { courseId: true } } },
   });
 
   if (!material) {

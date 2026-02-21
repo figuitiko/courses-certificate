@@ -1,11 +1,9 @@
-import { cookies } from "next/headers";
-
 import { db } from "@/lib/db";
-import { USER_COOKIE_KEY } from "@/lib/constants";
+import { auth } from "@/lib/auth";
 
 export async function getCurrentUser() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get(USER_COOKIE_KEY)?.value;
+  const session = await auth();
+  const userId = session?.user?.id;
 
   if (!userId) return null;
   return db.user.findUnique({ where: { id: userId } });
@@ -14,7 +12,15 @@ export async function getCurrentUser() {
 export async function requireUser() {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("Create your profile handle first.");
+    throw new Error("You must sign in first.");
+  }
+  return user;
+}
+
+export async function requireAdmin() {
+  const user = await requireUser();
+  if (user.role !== "ADMIN") {
+    throw new Error("Admin access required.");
   }
   return user;
 }

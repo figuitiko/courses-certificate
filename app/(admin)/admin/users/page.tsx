@@ -1,13 +1,26 @@
+import { redirect } from "next/navigation";
+
 import { db } from "@/lib/db";
-import { isAdminModeEnabled } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { AdminAdjustPointsForm } from "@/components/admin/admin-adjust-points-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function AdminUsersPage() {
-  const adminEnabled = await isAdminModeEnabled();
-  if (!adminEnabled) {
-    return <p className="rounded-md border border-dashed p-6 text-center text-muted-foreground">Admin mode is disabled.</p>;
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect("/sign-in?next=/admin/users");
+  }
+
+  if (user.role !== "ADMIN") {
+    redirect("/");
   }
 
   const users = await db.user.findMany({
@@ -15,9 +28,9 @@ export default async function AdminUsersPage() {
     include: {
       points: {
         orderBy: { createdAt: "desc" },
-        take: 5
-      }
-    }
+        take: 5,
+      },
+    },
   });
 
   return (

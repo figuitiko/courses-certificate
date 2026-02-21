@@ -7,21 +7,27 @@ import { toast } from "sonner";
 import { enrollInCourse } from "@/actions/enrollments";
 import { Button } from "@/components/ui/button";
 
-export function EnrollButton({ userId, courseId }: { userId?: string; courseId: string }) {
+export function EnrollButton({
+  isAuthenticated,
+  courseId,
+}: {
+  isAuthenticated: boolean;
+  courseId: string;
+}) {
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
   return (
     <Button
-      disabled={!userId || pending}
+      disabled={pending}
       onClick={() => {
-        if (!userId) {
-          toast.error("Create your profile handle first from Profile page.");
+        if (!isAuthenticated) {
+          toast.error("Sign in first to enroll.");
           return;
         }
 
         startTransition(async () => {
-          const result = await enrollInCourse({ userId, courseId });
+          const result = await enrollInCourse({ courseId });
           if (!result.ok) {
             toast.error(result.error);
             return;

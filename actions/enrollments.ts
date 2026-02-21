@@ -7,16 +7,20 @@ import { db } from "@/lib/db";
 import { DEFAULT_POINTS } from "@/lib/constants";
 import { enrollSchema } from "@/lib/zod/schemas";
 import { awardPointsOnce } from "@/actions/points";
+import { requireUser } from "@/lib/session";
 import type { ActionResult } from "@/lib/action-result";
 
-export async function enrollInCourse(input: { userId: string; courseId: string }): Promise<ActionResult<{ enrollmentId: string }>> {
+export async function enrollInCourse(input: {
+  courseId: string;
+}): Promise<ActionResult<{ enrollmentId: string }>> {
+  const user = await requireUser();
   const parsed = enrollSchema.safeParse(input);
 
   if (!parsed.success) {
     return {
       ok: false,
       error: "Invalid enroll request.",
-      fieldErrors: parsed.error.flatten().fieldErrors
+      fieldErrors: parsed.error.flatten().fieldErrors,
     };
   }
 
@@ -26,17 +30,17 @@ export async function enrollInCourse(input: { userId: string; courseId: string }
       db.enrollment.upsert({
         where: {
           userId_courseId: {
-            userId: parsed.data.userId,
-            courseId: parsed.data.courseId
-          }
+            userId: user.id,
+            courseId: parsed.data.courseId,
+          },
         },
         create: {
-          userId: parsed.data.userId,
+          userId: user.id,
           courseId: parsed.data.courseId,
-          status: EnrollmentStatus.ENROLLED
+          status: EnrollmentStatus.ENROLLED,
         },
-        update: {}
-      })
+        update: {},
+      }),
     ]);
 
     if (!course) {
@@ -44,11 +48,11 @@ export async function enrollInCourse(input: { userId: string; courseId: string }
     }
 
     await awardPointsOnce({
-      userId: parsed.data.userId,
+      userId: user.id,
       sourceType: PointSourceType.COURSE_ENROLL,
       sourceId: parsed.data.courseId,
       points: course.pointsOnEnroll ?? DEFAULT_POINTS.enroll,
-      note: `Enrolled in ${course.title}`
+      note: `Enrolled in ${course.title}`,
     });
 
     revalidatePath(`/learn/${parsed.data.courseId}`);
@@ -64,24 +68,26 @@ export async function enrollInCourse(input: { userId: string; courseId: string }
   }
 }
 
-export async function getUserCourseState({ userId, courseId }: { userId: string; courseId: string }) {
+export async function getUserCourseState({ courseId }: { courseId: string }) {
+  const user = await requireUser();
+
   const [enrollment, progress] = await Promise.all([
     db.enrollment.findUnique({
       where: {
         userId_courseId: {
-          userId,
-          courseId
-        }
-      }
+          userId: user.id,
+          courseId,
+        },
+      },
     }),
     db.lessonProgress.findMany({
-      where: { userId, courseId, status: "COMPLETED" },
-      select: { lessonId: true }
-    })
+      where: { userId: user.id, courseId, status: "COMPLETED" },
+      select: { lessonId: true },
+    }),
   ]);
 
   return {
     enrollment,
-    completedLessonIds: progress.map((item) => item.lessonId)
+    completedLessonIds: progress.map((item) => item.lessonId),
   };
 }

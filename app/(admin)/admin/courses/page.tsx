@@ -1,21 +1,33 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
-import { isAdminModeEnabled } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
 import { AdminCourseForm } from "@/components/admin/admin-course-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function AdminCoursesPage() {
-  const adminEnabled = await isAdminModeEnabled();
+  const user = await getCurrentUser();
 
-  if (!adminEnabled) {
-    return <p className="rounded-md border border-dashed p-6 text-center text-muted-foreground">Admin mode is disabled.</p>;
+  if (!user) {
+    redirect("/sign-in?next=/admin/courses");
+  }
+
+  if (user.role !== "ADMIN") {
+    redirect("/");
   }
 
   const courses = await db.course.findMany({
     orderBy: { updatedAt: "desc" },
-    include: { lessons: true }
+    include: { lessons: true },
   });
 
   return (
@@ -48,10 +60,15 @@ export default async function AdminCoursesPage() {
               {courses.map((course) => (
                 <TableRow key={course.id}>
                   <TableCell>{course.title}</TableCell>
-                  <TableCell>{course.published ? "Published" : "Draft"}</TableCell>
+                  <TableCell>
+                    {course.published ? "Published" : "Draft"}
+                  </TableCell>
                   <TableCell>{course.lessons.length}</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/admin/courses/${course.id}`} className="text-primary underline">
+                    <Link
+                      href={`/admin/courses/${course.id}`}
+                      className="text-primary underline"
+                    >
                       Edit
                     </Link>
                   </TableCell>
