@@ -5,6 +5,7 @@ import { hash } from "bcryptjs";
 
 import { db } from "@/lib/db";
 import { signIn, signOut } from "@/lib/auth";
+import { requireUser } from "@/lib/session";
 import { signInSchema, signUpSchema } from "@/lib/zod/schemas";
 import type { ActionResult } from "@/lib/action-result";
 
@@ -104,6 +105,13 @@ export async function signInWithCredentials(input: {
 
 export async function signInWithGoogle(nextPath?: string) {
   await signIn("google", { redirectTo: normalizeNextPath(nextPath) });
+}
+
+export async function linkGoogleAccount(nextPath?: string) {
+  await requireUser();
+  await signIn("google", {
+    redirectTo: normalizeNextPath(nextPath ?? "/profile"),
+  });
 }
 
 export async function signOutUser() {

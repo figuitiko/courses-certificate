@@ -16,7 +16,7 @@ import {
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   const [session, params] = await Promise.all([auth(), searchParams]);
   const googleEnabled = Boolean(
@@ -24,6 +24,10 @@ export default async function SignInPage({
   );
   const nextPath =
     params.next && params.next.startsWith("/") ? params.next : "/courses";
+  const oauthErrorMessage =
+    params.error === "OAuthAccountNotLinked"
+      ? "This email already uses password sign-in. Sign in with password first, then connect Google from Profile."
+      : undefined;
 
   if (session?.user) {
     redirect(nextPath as never);
@@ -38,7 +42,7 @@ export default async function SignInPage({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <SignInForm nextPath={nextPath} />
+        <SignInForm nextPath={nextPath} oauthErrorMessage={oauthErrorMessage} />
         {googleEnabled && (
           <form action={signInWithGoogle.bind(null, nextPath)}>
             <Button type="submit" variant="outline" className="w-full">

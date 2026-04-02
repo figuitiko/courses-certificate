@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { toast } from "sonner";
 
 import { signInWithCredentials } from "@/actions/auth";
@@ -8,8 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function SignInForm({ nextPath = "/courses" }: { nextPath?: string }) {
+export function SignInForm({
+  nextPath = "/courses",
+  oauthErrorMessage,
+}: {
+  nextPath?: string;
+  oauthErrorMessage?: string;
+}) {
   const [pending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (oauthErrorMessage) {
+      toast.error(oauthErrorMessage);
+    }
+  }, [oauthErrorMessage]);
 
   return (
     <form
