@@ -22,9 +22,9 @@ export default async function ProfilePage() {
     return (
       <Card className="mx-auto max-w-lg">
         <CardHeader>
-          <CardTitle>Sign in required</CardTitle>
+          <CardTitle>Necesitas iniciar sesión</CardTitle>
           <CardDescription>
-            Sign in to view your profile and points ledger.
+            Inicia sesión para ver tu perfil y tu historial de puntos.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -32,7 +32,7 @@ export default async function ProfilePage() {
             href="/sign-in?next=/profile"
             className="text-primary underline"
           >
-            Go to sign in
+            Ir a iniciar sesión
           </Link>
         </CardContent>
       </Card>
@@ -57,38 +57,38 @@ export default async function ProfilePage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-3xl font-semibold">Profile</h1>
-        <p className="text-muted-foreground">Handle: @{user.handle}</p>
+        <h1 className="text-3xl font-semibold">Perfil</h1>
+        <p className="text-muted-foreground">Usuario: @{user.handle}</p>
         <PointsBadge points={points.totalPoints} />
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Connected Accounts</CardTitle>
+          <CardTitle>Cuentas conectadas</CardTitle>
           <CardDescription>
-            Sign in with Google after linking your account.
+            Vincula tu cuenta para poder iniciar sesión con Google.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {googleEnabled ? (
             googleLinked ? (
-              <p className="text-sm text-muted-foreground">Google connected.</p>
+              <p className="text-sm text-muted-foreground">Google conectado.</p>
             ) : (
               <form action={linkGoogleAccount.bind(null, "/profile")}>
                 <Button type="submit" variant="outline">
-                  Connect Google
+                  Conectar Google
                 </Button>
               </form>
             )
           ) : (
             <p className="text-sm text-muted-foreground">
-              Google sign-in is not enabled.
+              El inicio de sesión con Google no está habilitado.
             </p>
           )}
         </CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Points Ledger</CardTitle>
+          <CardTitle>Historial de puntos</CardTitle>
         </CardHeader>
         <CardContent>
           <PointsLedgerTable rows={points.ledger} />

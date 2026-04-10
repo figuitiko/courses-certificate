@@ -24,26 +24,26 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">Admin Dashboard</h1>
+        <h1 className="text-3xl font-semibold">Panel de administración</h1>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Courses ({courses})</CardTitle>
+            <CardTitle>Cursos ({courses})</CardTitle>
           </CardHeader>
           <CardContent>
             <Link className="text-primary underline" href="/admin/courses">
-              Manage courses
+              Administrar cursos
             </Link>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Users ({users})</CardTitle>
+            <CardTitle>Usuarios ({users})</CardTitle>
           </CardHeader>
           <CardContent>
             <Link className="text-primary underline" href="/admin/users">
-              View users & points
+              Ver usuarios y puntos
             </Link>
           </CardContent>
         </Card>

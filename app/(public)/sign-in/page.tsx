@@ -26,7 +26,7 @@ export default async function SignInPage({
     params.next && params.next.startsWith("/") ? params.next : "/courses";
   const oauthErrorMessage =
     params.error === "OAuthAccountNotLinked"
-      ? "This email already uses password sign-in. Sign in with password first, then connect Google from Profile."
+      ? "Este correo ya usa acceso con contraseña. Inicia sesión con tu contraseña primero y después conecta Google desde Perfil."
       : undefined;
 
   if (session?.user) {
@@ -36,9 +36,9 @@ export default async function SignInPage({
   return (
     <Card className="mx-auto max-w-lg">
       <CardHeader>
-        <CardTitle>Sign in</CardTitle>
+        <CardTitle>Iniciar sesión</CardTitle>
         <CardDescription>
-          Use your email/password or continue with Google.
+          Usa tu correo y contraseña o continúa con Google.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -46,14 +46,14 @@ export default async function SignInPage({
         {googleEnabled && (
           <form action={signInWithGoogle.bind(null, nextPath)}>
             <Button type="submit" variant="outline" className="w-full">
-              Continue with Google
+              Continuar con Google
             </Button>
           </form>
         )}
         <p className="text-sm text-muted-foreground">
-          No account yet?{" "}
+          ¿Todavía no tienes cuenta?{" "}
           <Link href="/sign-up" className="text-primary underline">
-            Create one
+            Crear una
           </Link>
         </p>
       </CardContent>

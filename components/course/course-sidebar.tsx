@@ -27,7 +27,7 @@ export function CourseSidebar({
 
   return (
     <aside className="space-y-2">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Lessons</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Lecciones</h3>
       {lessons.map((lesson) => {
         const active = activeLessonId ? activeLessonId === lesson.id : lesson.order === 1;
         const done = completed.has(lesson.id);
@@ -44,7 +44,7 @@ export function CourseSidebar({
             <span>
               {lesson.order}. {lesson.title}
             </span>
-            {done && <Badge variant="secondary">Done</Badge>}
+            {done && <Badge variant="secondary">Hecha</Badge>}
           </Link>
         );
       })}

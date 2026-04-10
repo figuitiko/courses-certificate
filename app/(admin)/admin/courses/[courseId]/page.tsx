@@ -40,10 +40,10 @@ export default async function AdminCourseDetailPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Edit Course</h1>
+      <h1 className="text-3xl font-semibold">Editar curso</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Course settings</CardTitle>
+          <CardTitle>Configuración del curso</CardTitle>
         </CardHeader>
         <CardContent>
           <AdminCourseForm defaults={course} />
@@ -52,7 +52,7 @@ export default async function AdminCourseDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Add lesson</CardTitle>
+          <CardTitle>Agregar lección</CardTitle>
         </CardHeader>
         <CardContent>
           <AdminLessonForm
@@ -79,7 +79,7 @@ export default async function AdminCourseDetailPage({
             <div className="space-y-2">
               {lesson.materials.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  No materials yet.
+                  Aún no hay materiales.
                 </p>
               ) : (
                 lesson.materials.map((material) => (

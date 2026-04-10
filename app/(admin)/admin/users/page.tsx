@@ -35,18 +35,18 @@ export default async function AdminUsersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Users & Points</h1>
+      <h1 className="text-3xl font-semibold">Usuarios y puntos</h1>
       <Card>
         <CardHeader>
-          <CardTitle>User list</CardTitle>
+          <CardTitle>Lista de usuarios</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Handle</TableHead>
-                <TableHead>Total points</TableHead>
-                <TableHead>Adjust points</TableHead>
+                <TableHead>Usuario</TableHead>
+                <TableHead>Puntos totales</TableHead>
+                <TableHead>Ajustar puntos</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -26,14 +26,14 @@ export default async function LearnPage({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Sign in to start learning</CardTitle>
+          <CardTitle>Inicia sesión para empezar a aprender</CardTitle>
         </CardHeader>
         <CardContent>
           <Link
             className="text-primary underline"
             href={`/sign-in?next=/learn/${courseId}`}
           >
-            Go to sign in
+            Ir a iniciar sesión
           </Link>
         </CardContent>
       </Card>
@@ -53,14 +53,14 @@ export default async function LearnPage({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Enroll first</CardTitle>
+          <CardTitle>Primero inscríbete</CardTitle>
         </CardHeader>
         <CardContent>
           <Link
             className="text-primary underline"
             href={`/courses/${course.id}`}
           >
-            Open course detail and enroll
+            Abre el detalle del curso e inscríbete
           </Link>
         </CardContent>
       </Card>
@@ -75,7 +75,7 @@ export default async function LearnPage({
     return (
       <Card>
         <CardHeader>
-          <CardTitle>No lessons yet</CardTitle>
+          <CardTitle>Aún no hay lecciones</CardTitle>
         </CardHeader>
       </Card>
     );

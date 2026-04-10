@@ -32,10 +32,10 @@ export default async function AdminCoursesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Manage Courses</h1>
+      <h1 className="text-3xl font-semibold">Administrar cursos</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Create course</CardTitle>
+          <CardTitle>Crear curso</CardTitle>
         </CardHeader>
         <CardContent>
           <AdminCourseForm />
@@ -44,16 +44,16 @@ export default async function AdminCoursesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Existing courses</CardTitle>
+          <CardTitle>Cursos existentes</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Lessons</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Título</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Lecciones</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -61,7 +61,7 @@ export default async function AdminCoursesPage() {
                 <TableRow key={course.id}>
                   <TableCell>{course.title}</TableCell>
                   <TableCell>
-                    {course.published ? "Published" : "Draft"}
+                    {course.published ? "Publicado" : "Borrador"}
                   </TableCell>
                   <TableCell>{course.lessons.length}</TableCell>
                   <TableCell className="text-right">
@@ -69,7 +69,7 @@ export default async function AdminCoursesPage() {
                       href={`/admin/courses/${course.id}`}
                       className="text-primary underline"
                     >
-                      Edit
+                      Editar
                     </Link>
                   </TableCell>
                 </TableRow>

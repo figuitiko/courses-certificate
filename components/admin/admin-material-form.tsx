@@ -29,16 +29,16 @@ export function AdminMaterialForm({ lessonId }: { lessonId: string }) {
             return;
           }
 
-          toast.success("Material added.");
+          toast.success("Material agregado.");
           router.refresh();
         });
       }}
     >
-      <Input name="title" placeholder="Material title" required />
+      <Input name="title" placeholder="Título del material" required />
       <Input name="fileUrl" placeholder="https://..." required />
       <Input name="fileType" placeholder="pdf" required />
       <Button type="submit" disabled={pending} size="sm">
-        Add
+        Agregar
       </Button>
     </form>
   );
@@ -60,12 +60,12 @@ export function RemoveMaterialButton({ materialId }: { materialId: string }) {
             toast.error(result.error);
             return;
           }
-          toast.success("Material removed.");
+          toast.success("Material eliminado.");
           router.refresh();
         });
       }}
     >
-      Remove
+      Eliminar
     </Button>
   );
 }

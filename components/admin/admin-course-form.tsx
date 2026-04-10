@@ -45,39 +45,39 @@ export function AdminCourseForm({ defaults }: { defaults?: CourseDefaults }) {
             return;
           }
 
-          toast.success(defaults?.id ? "Course updated." : "Course created.");
+          toast.success(defaults?.id ? "Curso actualizado." : "Curso creado.");
           router.refresh();
         });
       }}
     >
       <div className="grid gap-1.5">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">Título</Label>
         <Input id="title" name="title" defaultValue={defaults?.title} required />
       </div>
       <div className="grid gap-1.5">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Descripción</Label>
         <Textarea id="description" name="description" defaultValue={defaults?.description ?? ""} required />
       </div>
       <div className="grid gap-1.5">
-        <Label htmlFor="thumbnailUrl">Thumbnail URL</Label>
+        <Label htmlFor="thumbnailUrl">URL de miniatura</Label>
         <Input id="thumbnailUrl" name="thumbnailUrl" defaultValue={defaults?.thumbnailUrl ?? ""} />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="grid gap-1.5">
-          <Label htmlFor="pointsOnEnroll">Points on enroll</Label>
+          <Label htmlFor="pointsOnEnroll">Puntos al inscribirse</Label>
           <Input id="pointsOnEnroll" name="pointsOnEnroll" type="number" defaultValue={defaults?.pointsOnEnroll ?? 20} min={0} />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="pointsOnComplete">Points on complete</Label>
+          <Label htmlFor="pointsOnComplete">Puntos al completar</Label>
           <Input id="pointsOnComplete" name="pointsOnComplete" type="number" defaultValue={defaults?.pointsOnComplete ?? 100} min={0} />
         </div>
       </div>
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" name="published" defaultChecked={defaults?.published ?? false} />
-        Published
+        Publicado
       </label>
       <Button type="submit" disabled={pending}>
-        {pending ? "Saving..." : defaults?.id ? "Update course" : "Create course"}
+        {pending ? "Guardando..." : defaults?.id ? "Actualizar curso" : "Crear curso"}
       </Button>
     </form>
   );

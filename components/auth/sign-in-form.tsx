@@ -44,7 +44,7 @@ export function SignInForm({
       }}
     >
       <div className="grid gap-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Correo electrónico</Label>
         <Input
           id="email"
           name="email"
@@ -55,7 +55,7 @@ export function SignInForm({
       </div>
 
       <div className="grid gap-1.5">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Contraseña</Label>
         <Input
           id="password"
           name="password"
@@ -66,7 +66,7 @@ export function SignInForm({
       </div>
 
       <Button type="submit" disabled={pending}>
-        {pending ? "Signing in..." : "Sign in"}
+        {pending ? "Iniciando sesión..." : "Iniciar sesión"}
       </Button>
     </form>
   );

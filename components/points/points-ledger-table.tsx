@@ -3,10 +3,10 @@ import { PointSourceType } from "@prisma/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const sourceLabels: Record<PointSourceType, string> = {
-  COURSE_ENROLL: "Course enroll",
-  LESSON_COMPLETE: "Lesson complete",
-  COURSE_COMPLETE: "Course complete",
-  ADMIN_ADJUST: "Admin adjust"
+  COURSE_ENROLL: "Inscripción al curso",
+  LESSON_COMPLETE: "Lección completada",
+  COURSE_COMPLETE: "Curso completado",
+  ADMIN_ADJUST: "Ajuste administrativo"
 };
 
 export function PointsLedgerTable({
@@ -24,17 +24,17 @@ export function PointsLedgerTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Event</TableHead>
-          <TableHead>Note</TableHead>
-          <TableHead className="text-right">Points</TableHead>
-          <TableHead className="text-right">Date</TableHead>
+          <TableHead>Evento</TableHead>
+          <TableHead>Nota</TableHead>
+          <TableHead className="text-right">Puntos</TableHead>
+          <TableHead className="text-right">Fecha</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows.length === 0 ? (
           <TableRow>
             <TableCell colSpan={4} className="text-center text-muted-foreground">
-              No point activity yet.
+              Aún no hay movimientos de puntos.
             </TableCell>
           </TableRow>
         ) : (

@@ -29,18 +29,18 @@ export function SignUpForm() {
             return;
           }
 
-          toast.success("Account created. Sign in to continue.");
+          toast.success("Cuenta creada. Inicia sesión para continuar.");
           router.push("/sign-in");
         });
       }}
     >
       <div className="grid gap-1.5">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">Nombre</Label>
         <Input id="name" name="name" autoComplete="name" required />
       </div>
 
       <div className="grid gap-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Correo electrónico</Label>
         <Input
           id="email"
           name="email"
@@ -51,7 +51,7 @@ export function SignUpForm() {
       </div>
 
       <div className="grid gap-1.5">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Contraseña</Label>
         <Input
           id="password"
           name="password"
@@ -63,7 +63,7 @@ export function SignUpForm() {
       </div>
 
       <Button type="submit" disabled={pending}>
-        {pending ? "Creating account..." : "Create account"}
+        {pending ? "Creando cuenta..." : "Crear cuenta"}
       </Button>
     </form>
   );

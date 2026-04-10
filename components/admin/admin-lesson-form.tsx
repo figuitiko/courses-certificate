@@ -31,20 +31,20 @@ export function AdminLessonForm({ courseId, nextOrder }: { courseId: string; nex
             return;
           }
 
-          toast.success("Lesson created.");
+          toast.success("Lección creada.");
           router.refresh();
         });
       }}
     >
-      <Input name="title" placeholder="Lesson title" required />
-      <Input name="videoUrl" placeholder="Video URL (YouTube embed etc.)" />
-      <Input name="content" placeholder="Optional lesson notes" />
+      <Input name="title" placeholder="Título de la lección" required />
+      <Input name="videoUrl" placeholder="URL del video (embed de YouTube, etc.)" />
+      <Input name="content" placeholder="Notas opcionales de la lección" />
       <div className="grid grid-cols-2 gap-3">
         <Input name="order" type="number" min={1} defaultValue={nextOrder} />
         <Input name="pointsOnComplete" type="number" min={0} defaultValue={10} />
       </div>
       <Button type="submit" disabled={pending}>
-        {pending ? "Adding..." : "Add lesson"}
+        {pending ? "Agregando..." : "Agregar lección"}
       </Button>
     </form>
   );

@@ -62,15 +62,15 @@ export function LessonPlayer({
         </div>
       ) : (
         <div className="rounded-md border border-dashed p-8 text-center text-sm text-muted-foreground">
-          No video URL provided.
+          No se proporcionó una URL de video.
         </div>
       )}
 
       <div className="space-y-2">
-        <h3 className="font-medium">Downloadable Materials</h3>
+        <h3 className="font-medium">Materiales descargables</h3>
         {lesson.materials.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No materials for this lesson yet.
+            Aún no hay materiales para esta lección.
           </p>
         ) : (
           <ul className="space-y-2 text-sm">
@@ -105,8 +105,8 @@ export function LessonPlayer({
 
             toast.success(
               result.data.completedCourse
-                ? "Lesson complete. Course completed!"
-                : "Lesson marked complete.",
+                ? "Lección completada. Curso terminado."
+                : "Lección marcada como completada.",
             );
             router.refresh();
           });
@@ -114,10 +114,10 @@ export function LessonPlayer({
         disabled={pending || isCompleted}
       >
         {isCompleted
-          ? "Already completed"
+          ? "Ya completada"
           : pending
-            ? "Saving..."
-            : "Mark complete"}
+            ? "Guardando..."
+            : "Marcar como completada"}
       </Button>
     </section>
   );

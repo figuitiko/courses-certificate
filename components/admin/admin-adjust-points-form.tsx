@@ -28,15 +28,15 @@ export function AdminAdjustPointsForm({ userId }: { userId: string }) {
             return;
           }
 
-          toast.success("Points updated.");
+          toast.success("Puntos actualizados.");
           router.refresh();
         });
       }}
     >
-      <Input type="number" name="points" placeholder="+25 or -10" required />
-      <Input name="note" placeholder="Reason for adjustment" required />
+      <Input type="number" name="points" placeholder="+25 o -10" required />
+      <Input name="note" placeholder="Motivo del ajuste" required />
       <Button type="submit" disabled={pending} size="sm">
-        Apply
+        Aplicar
       </Button>
     </form>
   );

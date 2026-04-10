@@ -43,20 +43,20 @@ export function AdminLessonEditor({ lesson, orderedLessonIds, courseId }: { less
               return;
             }
 
-            toast.success("Lesson updated.");
+            toast.success("Lección actualizada.");
             router.refresh();
           });
         }}
       >
         <Input name="title" defaultValue={lesson.title} required />
-        <Input name="videoUrl" defaultValue={lesson.videoUrl ?? ""} placeholder="Video URL" />
-        <Input name="content" defaultValue={lesson.content ?? ""} placeholder="Content" />
+        <Input name="videoUrl" defaultValue={lesson.videoUrl ?? ""} placeholder="URL del video" />
+        <Input name="content" defaultValue={lesson.content ?? ""} placeholder="Contenido" />
         <div className="grid grid-cols-2 gap-2">
           <Input name="order" defaultValue={lesson.order} type="number" min={1} />
           <Input name="pointsOnComplete" defaultValue={lesson.pointsOnComplete ?? 10} type="number" min={0} />
         </div>
         <Button size="sm" type="submit" disabled={pending}>
-          {pending ? "Saving..." : "Save lesson"}
+          {pending ? "Guardando..." : "Guardar lección"}
         </Button>
       </form>
 
@@ -74,12 +74,12 @@ export function AdminLessonEditor({ lesson, orderedLessonIds, courseId }: { less
                 toast.error(result.error);
                 return;
               }
-              toast.success("Lesson moved up.");
+              toast.success("Lección movida hacia arriba.");
               router.refresh();
             });
           }}
         >
-          Move up
+          Subir
         </Button>
         <Button
           size="sm"
@@ -94,12 +94,12 @@ export function AdminLessonEditor({ lesson, orderedLessonIds, courseId }: { less
                 toast.error(result.error);
                 return;
               }
-              toast.success("Lesson moved down.");
+              toast.success("Lección movida hacia abajo.");
               router.refresh();
             });
           }}
         >
-          Move down
+          Bajar
         </Button>
       </div>
     </div>

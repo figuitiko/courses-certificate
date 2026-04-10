@@ -22,7 +22,7 @@ export function EnrollButton({
       disabled={pending}
       onClick={() => {
         if (!isAuthenticated) {
-          toast.error("Sign in first to enroll.");
+          toast.error("Primero inicia sesión para inscribirte.");
           return;
         }
 
@@ -32,13 +32,13 @@ export function EnrollButton({
             toast.error(result.error);
             return;
           }
-          toast.success("Enrolled successfully.");
+          toast.success("Inscripción completada.");
           router.push(`/learn/${courseId}`);
           router.refresh();
         });
       }}
     >
-      {pending ? "Enrolling..." : "Enroll now"}
+      {pending ? "Inscribiendo..." : "Inscribirme ahora"}
     </Button>
   );
 }

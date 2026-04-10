@@ -21,17 +21,17 @@ export default async function SignUpPage() {
   return (
     <Card className="mx-auto max-w-lg">
       <CardHeader>
-        <CardTitle>Create account</CardTitle>
+        <CardTitle>Crear cuenta</CardTitle>
         <CardDescription>
-          Set up your learner account to enroll and track progress.
+          Configura tu cuenta para inscribirte y dar seguimiento a tu avance.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <SignUpForm />
         <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          ¿Ya tienes cuenta?{" "}
           <Link href="/sign-in" className="text-primary underline">
-            Sign in
+            Iniciar sesión
           </Link>
         </p>
       </CardContent>

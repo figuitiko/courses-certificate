@@ -1,9 +1,15 @@
 import Link from "next/link";
+import { EnrollmentStatus } from "@prisma/client";
 
 import { getCurrentUser } from "@/lib/session";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+
+const enrollmentStatusLabels: Record<EnrollmentStatus, string> = {
+  ENROLLED: "Inscrito",
+  COMPLETED: "Completado",
+};
 
 export default async function MyCoursesPage() {
   const user = await getCurrentUser();
@@ -12,16 +18,16 @@ export default async function MyCoursesPage() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Profile required</CardTitle>
+          <CardTitle>Necesitas iniciar sesión</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Sign in first from{" "}
+            Primero inicia sesión desde{" "}
             <Link
               href="/sign-in?next=/my-courses"
               className="text-primary underline"
             >
-              Sign in
+              Iniciar sesión
             </Link>
             .
           </p>
@@ -38,10 +44,10 @@ export default async function MyCoursesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">My Courses</h1>
+      <h1 className="text-3xl font-semibold">Mis cursos</h1>
       {enrollments.length === 0 ? (
         <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
-          You are not enrolled in any courses yet.
+          Todavía no estás inscrito en ningún curso.
         </p>
       ) : (
         <div className="grid gap-4">
@@ -51,7 +57,7 @@ export default async function MyCoursesPage() {
                 <div>
                   <h2 className="font-semibold">{enrollment.course.title}</h2>
                   <p className="text-sm text-muted-foreground">
-                    {enrollment.status}
+                    {enrollmentStatusLabels[enrollment.status]}
                   </p>
                 </div>
                 <div className="w-full max-w-xs space-y-2">
@@ -64,7 +70,7 @@ export default async function MyCoursesPage() {
                   href={`/learn/${enrollment.courseId}`}
                   className="text-primary underline"
                 >
-                  Continue
+                  Continuar
                 </Link>
               </CardContent>
             </Card>

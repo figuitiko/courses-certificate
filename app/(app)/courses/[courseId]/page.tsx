@@ -23,21 +23,21 @@ export default async function CourseDetailPage({
         <h1 className="text-3xl font-semibold">{course.title}</h1>
         <p className="max-w-3xl text-muted-foreground">{course.description}</p>
         <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-          <span>{course.lessons.length} lessons</span>
-          <span>{course.pointsOnEnroll} points on enroll</span>
-          <span>{course.pointsOnComplete} points on completion</span>
+          <span>{course.lessons.length} lecciones</span>
+          <span>{course.pointsOnEnroll} puntos al inscribirte</span>
+          <span>{course.pointsOnComplete} puntos al completar</span>
         </div>
         <EnrollButton isAuthenticated={Boolean(user)} courseId={course.id} />
       </section>
 
       <Card>
         <CardHeader>
-          <CardTitle>Lesson outline</CardTitle>
+          <CardTitle>Temario</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {course.lessons.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No lessons available yet.
+              Aún no hay lecciones disponibles.
             </p>
           ) : (
             course.lessons.map((lesson) => (
